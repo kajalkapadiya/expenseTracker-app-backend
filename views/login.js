@@ -9,8 +9,10 @@ document
     try {
       // Check if the email exists
       const response = await axios.post("/login", { email, password });
+      localStorage.setItem("token", response.data.token);
 
       alert(response.data.message);
+      window.location.href = "/expenses";
     } catch (error) {
       // Check if there's an error message in the response data
       if (error.response && error.response.data && error.response.data.error) {

@@ -1,9 +1,16 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("./index");
+const Expense = require("./expense");
 
 const User = sequelize.define(
   "User",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -22,5 +29,8 @@ const User = sequelize.define(
     tableName: "users",
   }
 );
+
+// Define association
+// User.hasOne(Expense);
 
 module.exports = User;
