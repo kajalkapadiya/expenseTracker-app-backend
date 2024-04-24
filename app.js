@@ -5,9 +5,11 @@ const app = express();
 const sequelize = require("./models/index");
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const purchaseRoutes = require("./routes/purchase");
 const path = require("path");
 const User = require("./models/user");
 const Expense = require("./models/expense");
+const Order = require("./models/orders");
 
 // Middleware
 app.use(bodyParser.json());
@@ -15,6 +17,9 @@ app.use(express.static(path.join(__dirname, "views")));
 
 User.hasMany(Expense); // user has many expenses
 Expense.belongsTo(User); // but expense belong to only one user
+
+User.hasMany(Order);
+Order.belongsTo(User);
 
 // Sync Sequelize models with the database
 sequelize
@@ -29,6 +34,7 @@ sequelize
 //routes
 app.use("/", userRoutes);
 app.use("/expenses", expenseRoutes);
+app.use("/purchase", purchaseRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;

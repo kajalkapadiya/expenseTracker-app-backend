@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Daily Expense</title>
+    <link rel="stylesheet" href="expense-script.css" />
   </head>
   <body>
     <div class="container">
@@ -21,6 +22,8 @@
         </select>
         <input type="submit" value="Add Expense" />
       </form>
+      <button id="rzp-button">Buy Premium</button>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
       <div>
         <h3>Expenses List</h3>
         <ul id="expense-list"></ul>

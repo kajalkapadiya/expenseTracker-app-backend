@@ -14,5 +14,10 @@ router.post(
   userauthentication.authenticate,
   expenseController.submitExpense
 );
+router.delete(
+  "/:expenseId",
+  userauthentication.authenticate,
+  expenseController.deleteExpense
+);
 
 module.exports = router;

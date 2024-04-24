@@ -36,8 +36,8 @@ exports.signup = async (req, res) => {
   }
 };
 
-const generateAccessToken = (id) => {
-  return jwt.sign({ userId: id }, "secretkey");
+exports.generateAccessToken = (id, name, ispremiumuser) => {
+  return jwt.sign({ userId: id, name: name, ispremiumuser }, "secretkey");
 };
 
 exports.getLoginPage = async (req, res) => {

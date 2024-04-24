@@ -24,7 +24,6 @@ exports.allExpenses = async (req, res) => {
 
 exports.submitExpense = async (req, res) => {
   const { amount, description, category } = req.body;
-  console.log("req.body is:", req.body);
 
   try {
     if (!amount || !description || !category) {
@@ -47,6 +46,37 @@ exports.submitExpense = async (req, res) => {
     res.status(201).json({ expense, allExpenses, success: true });
   } catch (error) {
     console.error("Error adding expense:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+exports.deleteExpense = async (req, res) => {
+  try {
+    const expenseId = req.params.expenseId;
+    console.log(expenseId);
+    const expense = await Expense.findByPk(expenseId);
+    console.log("expenseid", expense.id);
+    console.log("expenseUserId", expense.UserId);
+    if (!expense) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Expense not found" });
+    }
+
+    if (expense.UserId !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this expense",
+      });
+    }
+
+    await expense.destroy();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Expense deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting expense:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 };

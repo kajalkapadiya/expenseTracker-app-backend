@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Sequelize } = require("sequelize");
 const sequelize = require("./index");
 const Expense = require("./expense");
 
@@ -27,7 +27,8 @@ const User = sequelize.define(
   },
   {
     tableName: "users",
-  }
+  },
+  { ispremiumuser: Sequelize.BOOLEAN }
 );
 
 // Define association
