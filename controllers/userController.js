@@ -3,12 +3,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 
-exports.getSignupPage = async (req, res) => {
+const getSignupPage = async (req, res) => {
   const signupPagePath = path.join(__dirname, "..", "views", "signup.html");
   res.sendFile(signupPagePath);
 };
 
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
@@ -36,16 +36,16 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.generateAccessToken = (id, name, ispremiumuser) => {
+const generateAccessToken = (id, name, ispremiumuser) => {
   return jwt.sign({ userId: id, name: name, ispremiumuser }, "secretkey");
 };
 
-exports.getLoginPage = async (req, res) => {
+const getLoginPage = async (req, res) => {
   const loginPagePath = path.join(__dirname, "..", "views", "login.html");
   res.sendFile(loginPagePath);
 };
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -71,4 +71,12 @@ exports.login = async (req, res) => {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "Internal server error" });
   }
+};
+
+module.exports = {
+  getSignupPage,
+  signup,
+  generateAccessToken,
+  getLoginPage,
+  login,
 };

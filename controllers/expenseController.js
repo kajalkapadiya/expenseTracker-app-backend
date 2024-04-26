@@ -1,5 +1,7 @@
 const Expense = require("../models/expense");
 const path = require("path");
+const User = require("../models/user");
+const sequelize = require("../models/index");
 
 exports.getExpensePage = async (req, res, next) => {
   const expensePagePath = path.join(
@@ -24,6 +26,7 @@ exports.allExpenses = async (req, res) => {
 
 exports.submitExpense = async (req, res) => {
   const { amount, description, category } = req.body;
+  const t = await sequelize.transaction();
 
   try {
     if (!amount || !description || !category) {
@@ -33,19 +36,44 @@ exports.submitExpense = async (req, res) => {
     }
 
     // Create new expense associated with the logged-in user
-    const expense = await Expense.create({
-      amount,
-      description,
-      category,
-      UserId: req.user.id,
-    });
+    const expense = await Expense.create(
+      {
+        amount,
+        description,
+        category,
+        UserId: req.user.id,
+      },
+      { transaction: t }
+    );
+
+    const totalExpense = Number(req.user.totalExpenses) + Number(amount);
+    console.log(totalExpense);
+
+    // Update the total expenses of the user
+    await User.update(
+      {
+        totalExpenses: totalExpense,
+      },
+      {
+        where: {
+          id: req.user.id,
+        },
+        transaction: t,
+      }
+    );
+
+    // Commit the transaction
+    await t.commit();
 
     // Fetch all expenses after adding the new expense
     const allExpenses = await Expense.findAll();
 
+    // Send response
     res.status(201).json({ expense, allExpenses, success: true });
   } catch (error) {
     console.error("Error adding expense:", error);
+    // Rollback the transaction if an error occurred
+    await t.rollback();
     res.status(500).json({ success: false, error: error.message });
   }
 };
