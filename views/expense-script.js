@@ -1,3 +1,41 @@
+function showPremiumuserMessage() {
+  document.getElementById("rzp-button").style.visibility = "hidden";
+  document.getElementById("message").innerHTML = "You are a premium user ";
+}
+
+function parseJwt(token) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+
+  return JSON.parse(jsonPayload);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("token");
+  const decodeToken = parseJwt(token);
+  console.log("decodeToken", decodeToken);
+  const ispremiumuser = decodeToken.name;
+  if (ispremiumuser) {
+    showPremiumuserMessage();
+    showLeaderboard();
+  }
+
+  fetchExpenses();
+});
+
+function showError(err) {
+  document.body.innerHTML += `<div style="color:red;"> ${err}</div>`;
+}
+
 async function fetchExpenses() {
   const token = localStorage.getItem("token");
 
@@ -48,6 +86,28 @@ async function deleteExpense(expenseId) {
 }
 
 fetchExpenses();
+
+function showLeaderboard() {
+  const inputElement = document.createElement("input");
+  inputElement.type = "button";
+  inputElement.value = "Show Leaderboard";
+  inputElement.onclick = async () => {
+    const token = localStorage.getItem("token");
+    const userLeaderBoardArray = await axios.get("/premium/showLeaderBoard", {
+      headers: { Authorization: token },
+    });
+    console.log(userLeaderBoardArray);
+
+    var leaderboardElem = document.getElementById("leaderboard");
+    leaderboardElem.innerHTML += "<h1> Leader Board </<h1>";
+    userLeaderBoardArray.data.forEach((userDetails) => {
+      leaderboardElem.innerHTML += `<li>Name - ${
+        userDetails.name
+      } Total Expense - ${userDetails.total_cost || 0} </li>`;
+    });
+  };
+  document.getElementById("message").appendChild(inputElement);
+}
 
 // Event listener for form submission
 document
@@ -103,7 +163,7 @@ document.getElementById("rzp-button").onclick = async function (e) {
 
       console.log(res);
       alert("You are a Premium User Now");
-      document.getElementById("rzp-button1").style.visibility = "hidden";
+      document.getElementById("rzp-button").style.visibility = "hidden";
       document.getElementById("message").innerHTML = "You are a premium user ";
       localStorage.setItem("token", res.data.token);
       showLeaderboard();

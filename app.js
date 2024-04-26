@@ -6,6 +6,7 @@ const sequelize = require("./models/index");
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const purchaseRoutes = require("./routes/purchase");
+const premiumFeatureRoutes = require("./routes/premiumFeature");
 const path = require("path");
 const User = require("./models/user");
 const Expense = require("./models/expense");
@@ -35,6 +36,7 @@ sequelize
 app.use("/", userRoutes);
 app.use("/expenses", expenseRoutes);
 app.use("/purchase", purchaseRoutes);
+app.use("/premium", premiumFeatureRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
