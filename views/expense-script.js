@@ -96,7 +96,7 @@ function showLeaderboard() {
     const userLeaderBoardArray = await axios.get("/premium/showLeaderBoard", {
       headers: { Authorization: token },
     });
-    console.log(userLeaderBoardArray);
+    console.log(userLeaderBoardArray, token);
 
     var leaderboardElem = document.getElementById("leaderboard");
     leaderboardElem.innerHTML += "<h1> Leader Board </<h1>";

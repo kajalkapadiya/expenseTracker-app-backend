@@ -9,14 +9,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@getbrevo/brevo": "^2.1.0",
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.4",
+    "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
     "razorpay": "^2.9.3",
     "sequelize": "^6.37.3",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "sib-api-v3-sdk": "^8.5.0"
   }
 }

@@ -7,6 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 const purchaseRoutes = require("./routes/purchase");
 const premiumFeatureRoutes = require("./routes/premiumFeature");
+const forgotPassRoutes = require("./routes/forgotPassRoutes");
 const path = require("path");
 const User = require("./models/user");
 const Expense = require("./models/expense");
@@ -37,6 +38,7 @@ app.use("/", userRoutes);
 app.use("/expenses", expenseRoutes);
 app.use("/purchase", purchaseRoutes);
 app.use("/premium", premiumFeatureRoutes);
+app.use("/password", forgotPassRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
