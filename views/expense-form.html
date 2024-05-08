@@ -24,15 +24,34 @@
       </form>
       <div id="message"></div>
       <button id="rzp-button">Buy Premium</button>
-      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <button onclick="download()" id="downloadexpense">Download File</button>
+
+      <label for="expenses-per-page">Expenses per page:</label>
+      <select id="expenses-per-page">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+
       <div>
         <h3>Expenses List</h3>
         <ul id="expense-list"></ul>
       </div>
+
+      <!-- Pagination buttons -->
+      <div id="pagination">
+        <button id="prev-page" disabled>Previous Page</button>
+        <span id="page-info"></span>
+        <button id="next-page">Next Page</button>
+      </div>
+
       <p id="error-message" class="error-message"></p>
     </div>
     <ul id="leaderboard"></ul>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="expense-script.js"></script>
   </body>

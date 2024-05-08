@@ -1,3 +1,6 @@
+let currentPage = 1;
+const perPage = 10; // Number of expenses per page
+
 function showPremiumuserMessage() {
   document.getElementById("rzp-button").style.visibility = "hidden";
   document.getElementById("message").innerHTML = "You are a premium user ";
@@ -27,48 +30,103 @@ window.addEventListener("DOMContentLoaded", () => {
   if (ispremiumuser) {
     showPremiumuserMessage();
     showLeaderboard();
+    document.getElementById("downloadexpense").style.display = "block";
+  } else {
+    document.getElementById("downloadexpense").style.display = "none";
   }
 
-  fetchExpenses();
+  // Retrieve stored preference or default to 10
+  const perPage = localStorage.getItem("expensesPerPage") || 10;
+  // Set the selected option in the dropdown
+  document.getElementById("expenses-per-page").value = perPage;
+
+  fetchExpenses(currentPage, perPage);
 });
 
 function showError(err) {
   document.body.innerHTML += `<div style="color:red;"> ${err}</div>`;
 }
 
-async function fetchExpenses() {
+// Frontend code
+
+async function fetchExpenses(page, perPage) {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await axios.get("/expenses/expenses-data", {
-      headers: { Authorization: `${token}` },
-    });
-    const expenses = response.data.allExpenses;
+    const response = await axios.get(
+      `/expenses/expenses-data?page=${page}&perPage=${perPage}`,
+      {
+        headers: { Authorization: `${token}` },
+      }
+    );
+    const expensesByMonth = response.data.expensesByMonth;
 
     const expenseList = document.getElementById("expense-list");
     expenseList.innerHTML = "";
 
-    expenses.forEach((expense) => {
-      const listItem = document.createElement("li");
-      listItem.textContent = `Amount: ${expense.amount}, Description: ${expense.description}, Category: ${expense.category}`;
-      // Create delete button
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.addEventListener("click", async () => {
-        try {
-          await deleteExpense(expense.id);
-        } catch (error) {
-          console.error("Error deleting expense:", error);
-        }
-      });
+    for (const monthYear in expensesByMonth) {
+      const monthExpenses = expensesByMonth[monthYear];
 
-      listItem.appendChild(deleteButton);
-      expenseList.appendChild(listItem);
-    });
+      // Display month as heading
+      const monthHeading = document.createElement("h3");
+      monthHeading.textContent = monthYear;
+      expenseList.appendChild(monthHeading);
+
+      // Display expenses for the month
+      monthExpenses.forEach((expense) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `Amount: ${expense.amount}, Description: ${expense.description}, Category: ${expense.category}`;
+        // Create delete button
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", async () => {
+          try {
+            await deleteExpense(expense.id);
+            fetchExpenses(currentPage, perPage); // Reload expenses after deletion
+          } catch (error) {
+            console.error("Error deleting expense:", error);
+          }
+        });
+
+        listItem.appendChild(deleteButton);
+        expenseList.appendChild(listItem);
+      });
+    }
+
+    const totalPages = response.data.totalPages;
+    document.getElementById(
+      "page-info"
+    ).textContent = `Page ${currentPage} of ${totalPages}`;
+    document.getElementById("prev-page").disabled = currentPage === 1;
+    document.getElementById("next-page").disabled = currentPage === totalPages;
   } catch (error) {
     console.error("Error fetching expenses:", error);
   }
 }
+
+// Function to handle changing the number of expenses per page
+document
+  .getElementById("expenses-per-page")
+  .addEventListener("change", function () {
+    const perPage = this.value;
+    localStorage.setItem("expensesPerPage", perPage);
+    currentPage = 1; // Reset to first page when changing number of expenses per page
+    fetchExpenses(currentPage, perPage);
+  });
+
+// Pagination event listeners
+document.getElementById("prev-page").addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+    fetchExpenses(currentPage, perPage);
+  }
+});
+
+document.getElementById("next-page").addEventListener("click", () => {
+  console.log("next page", currentPage);
+  currentPage++;
+  fetchExpenses(currentPage, perPage);
+});
 
 async function deleteExpense(expenseId) {
   const token = localStorage.getItem("token");
@@ -78,14 +136,14 @@ async function deleteExpense(expenseId) {
       headers: { Authorization: `${token}` },
     });
     console.log("Expense deleted successfully.");
-    fetchExpenses();
+    fetchExpenses(currentPage, perPage);
   } catch (error) {
     console.error("Error deleting expense:", error);
     throw error;
   }
 }
 
-fetchExpenses();
+fetchExpenses(currentPage, perPage);
 
 function showLeaderboard() {
   const inputElement = document.createElement("input");
@@ -96,7 +154,7 @@ function showLeaderboard() {
     const userLeaderBoardArray = await axios.get("/premium/showLeaderBoard", {
       headers: { Authorization: token },
     });
-    console.log(userLeaderBoardArray, token);
+    console.log(userLeaderBoardArray);
 
     var leaderboardElem = document.getElementById("leaderboard");
     leaderboardElem.innerHTML += "<h1> Leader Board </<h1>";
@@ -130,7 +188,7 @@ document
         headers: { Authorization: `${token}` },
       });
       console.log("Expense added successfully. User ID:", response.data);
-      fetchExpenses();
+      fetchExpenses(currentPage);
     } catch (error) {
       console.error("Error adding expense:", error);
       document.getElementById("error-message").innerText =
@@ -196,3 +254,21 @@ document.getElementById("rzp-button").onclick = async function (e) {
     }
   });
 };
+
+async function download() {
+  try {
+    const token = localStorage.getItem("token");
+    // Make a request to the backend to fetch the download URL
+    const response = await axios.get("/expenses/download", {
+      headers: { Authorization: token },
+      responseType: "blob", // Ensure response type is blob
+    });
+    // Create a temporary anchor element
+    const anchor = document.createElement("a");
+    anchor.href = window.URL.createObjectURL(new Blob([response.data]));
+    anchor.download = "expenses.csv"; // Set download filename
+    anchor.click(); // Trigger click event to start download
+  } catch (error) {
+    console.error("Error fetching download URL:", error);
+  }
+}

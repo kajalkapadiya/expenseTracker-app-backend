@@ -19,5 +19,16 @@ router.delete(
   userauthentication.authenticate,
   expenseController.deleteExpense
 );
+router.get(
+  "/download",
+  userauthentication.authenticate,
+  expenseController.downloadExpenses
+);
+
+// router.get(
+//   "/daily",
+//   userauthentication.authenticate,
+//   expenseController.dailyExpenses
+// );
 
 module.exports = router;

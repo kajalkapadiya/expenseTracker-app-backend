@@ -12,6 +12,7 @@ const path = require("path");
 const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/orders");
+const Forgotpassword = require("./models/ForgotPasswordRequests");
 
 // Middleware
 app.use(bodyParser.json());
@@ -22,6 +23,9 @@ Expense.belongsTo(User); // but expense belong to only one user
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(Forgotpassword);
+Forgotpassword.belongsTo(User);
 
 // Sync Sequelize models with the database
 sequelize
