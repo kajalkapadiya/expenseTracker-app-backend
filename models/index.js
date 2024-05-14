@@ -1,10 +1,15 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("expenseTracker", "root", "12345678", {
-  host: "localhost",
-  logging: false,
-  dialect: "mysql",
-});
+const sequelize = new Sequelize(
+  "expenseTracker",
+  "root",
+  process.env.SEQ_PASS,
+  {
+    host: "localhost",
+    logging: false,
+    dialect: "mysql",
+  }
+);
 
 try {
   sequelize.authenticate();

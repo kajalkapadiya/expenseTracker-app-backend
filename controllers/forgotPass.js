@@ -74,52 +74,6 @@ const resetpassword = (req, res) => {
   });
 };
 
-// const updatepassword = (req, res) => {
-//   console.log("req", req.params);
-//   try {
-//     const { newpassword } = req.query;
-//     const { resetpasswordid } = req.params;
-//     Forgotpassword.findOne({ where: { id: resetpasswordid } }).then(
-//       (resetpasswordrequest) => {
-//         User.findOne({ where: { id: resetpasswordrequest.userId } }).then(
-//           (user) => {
-//             console.log("userDetails", user);
-//             if (user) {
-//               //encrypt the password
-
-//               const saltRounds = 10;
-//               bcrypt.genSalt(saltRounds, function (err, salt) {
-//                 if (err) {
-//                   console.log(err);
-//                   throw new Error(err);
-//                 }
-//                 bcrypt.hash(newpassword, salt, function (err, hash) {
-//                   // Store hash in your password DB.
-//                   if (err) {
-//                     console.log(err);
-//                     throw new Error(err);
-//                   }
-//                   user.update({ password: hash }).then(() => {
-//                     res
-//                       .status(201)
-//                       .json({ message: "Successfuly update the new password" });
-//                   });
-//                 });
-//               });
-//             } else {
-//               return res
-//                 .status(404)
-//                 .json({ error: "No user Exists", success: false });
-//             }
-//           }
-//         );
-//       }
-//     );
-//   } catch (error) {
-//     return res.status(403).json({ error, success: false });
-//   }
-// };
-
 const updatepassword = async (req, res) => {
   console.log("req", req.params);
   try {

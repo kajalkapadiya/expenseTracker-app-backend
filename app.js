@@ -14,6 +14,8 @@ const Expense = require("./models/expense");
 const Order = require("./models/orders");
 const Forgotpassword = require("./models/ForgotPasswordRequests");
 
+console.log("process_env", process.env.API_KEY);
+
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "views")));
