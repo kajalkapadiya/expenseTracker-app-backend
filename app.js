@@ -13,12 +13,20 @@ const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/orders");
 const Forgotpassword = require("./models/ForgotPasswordRequests");
+// const helmet = require("helmet");
+const fs = require("fs");
+const morgan = require("morgan");
 
-console.log("process_env", process.env.API_KEY);
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
 
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "views")));
+// app.use(helmet());
+app.use(morgan("combined", { stream: accessLogStream }));
 
 User.hasMany(Expense); // user has many expenses
 Expense.belongsTo(User); // but expense belong to only one user
