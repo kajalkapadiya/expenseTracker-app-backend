@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "API_KEY=xsmtpsib-4b84dd2608d0767cd300ba898bca4948b93df3f2bc2db2aeb590b9544b94a39f-GUfrm9ODkhaYHcsF USER_EMAIL=kajalkapadiya18@gmail.com SEQ_PASS=12345678 node app.js",
+    "start": "USER_EMAIL=kajalkapadiya18@gmail.com SEQ_PASS=12345678 node app.js",
     "start-server": "node app.js",
     "start:dev": "nodemon app.js"
   },

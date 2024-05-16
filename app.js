@@ -9,6 +9,7 @@ const purchaseRoutes = require("./routes/purchase");
 const premiumFeatureRoutes = require("./routes/premiumFeature");
 const forgotPassRoutes = require("./routes/forgotPassRoutes");
 const path = require("path");
+require("dotenv").config();
 const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/orders");
