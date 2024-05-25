@@ -21,13 +21,13 @@ const forgotPass = async (req, res) => {
     port: 587,
     secure: false, // Use `true` for port 465, `false` for all other ports
     auth: {
-      user: "kajalkapadiya18@gmail.com",
-      pass: "12345678",
+      user: process.env.USER,
+      pass: process.env.USER_PASS,
     },
   });
 
   const mailOption = {
-    from: "kajalkapadiya18@gmail.com",
+    from: process.env.USER,
     to: email,
     subject: "Forgot pass link",
     text: "click here to change the pass",
