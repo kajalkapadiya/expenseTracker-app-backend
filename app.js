@@ -18,6 +18,7 @@ const Forgotpassword = require("./models/ForgotPasswordRequests");
 const fs = require("fs");
 const morgan = require("morgan");
 
+require("dotenv").config();
 const accessLogStream = fs.createWriteStream(
   path.join(__dirname, "access.log"),
   { flags: "a" }
