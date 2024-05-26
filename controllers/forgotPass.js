@@ -5,6 +5,9 @@ const bcrypt = require("bcrypt");
 const Forgotpassword = require("../models/ForgotPasswordRequests");
 require("dotenv").config();
 
+console.log("user", process.env.USER);
+console.log("pass", process.env.API_KEY);
+
 const forgotPass = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ where: { email } });
@@ -17,12 +20,18 @@ const forgotPass = async (req, res) => {
   }
 
   const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
+    // host: "smtp-relay.brevo.com",
+    // port: 587,
+    // secure: false, // Use `true` for port 465, `false` for all other ports
+    // auth: {
+    //   user: process.env.USER,
+    //   pass: process.env.API_KEY,
+    // },
+    host: "smtp.ethereal.email",
     port: 587,
-    secure: false, // Use `true` for port 465, `false` for all other ports
     auth: {
-      user: process.env.USER,
-      pass: process.env.API_KEY,
+      user: "norris.moore35@ethereal.email",
+      pass: "3SxVrbARZ9r6KV4Acb",
     },
   });
 
