@@ -22,7 +22,7 @@ const forgotPass = async (req, res) => {
     secure: false, // Use `true` for port 465, `false` for all other ports
     auth: {
       user: process.env.USER,
-      pass: process.env.USER_PASS,
+      pass: process.env.API_KEY,
     },
   });
 
